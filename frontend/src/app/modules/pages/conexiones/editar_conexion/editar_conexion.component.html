@@ -1,0 +1,100 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <div class="flex-auto p-5 sm:px-10">
+        <div class="max-h-400 rounded-2xl w-3/3">
+            <form [formGroup]="connectionForm" (ngSubmit)="onSubmit()" class="flex flex-col px-8 py-6 pb-0 bg-card rounded-2xl shadow overflow-hidden">
+                <div class="flex gap-4 border-b mb-4">
+                    <div class="w-1/2 flex flex-col">
+                        <!-- Nombre -->
+                        <div class="flex flex-col">
+                            <mat-label class="block mb-1">Nombre</mat-label>
+                            <mat-form-field class="w-full">
+                                <input matInput formControlName="name" class="p-0" placeholder="Nombre de la conexión">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="w-1/2 flex flex-col">
+                        <!-- Tipo de Conexión -->
+                        <div class="flex flex-col">
+                            <mat-label class="block mb-1">Tipo de conexión</mat-label>
+                            <mat-form-field class="w-full">
+                                <mat-select formControlName="type" (selectionChange)="onTypeSelect()">
+                                    <mat-option [value]="0" selected="connectionForm?.controls?.['type']?.value === 0">MQTT</mat-option>
+                                    <mat-option [value]="1" selected="connectionForm?.controls?.['type']?.value === 1">API</mat-option>
+                                </mat-select>                                
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Opciones de Conexión -->
+                <div formGroupName="options">
+                    <!-- Si la conexión es MQTT -->
+                    <div *ngIf="connectionForm.controls['type'].value === 0" class="flex gap-4">
+                        <div class="w-1/2 flex flex-col">
+                            <div class="flex flex-col">
+                                <mat-label class="block mb-1">URL <span style="color: lightslategray">(Puerto incluido)</span></mat-label>
+                                <mat-form-field class="w-full">
+                                    <input matInput formControlName="URL" placeholder="wss://broker.example.com:port/mqtt">
+                                </mat-form-field>
+                            </div>
+                            <div class="flex flex-col">
+                                <mat-label class="block mb-1">Username</mat-label>
+                                <mat-form-field class="w-full">
+                                    <input matInput formControlName="username" placeholder="Nombre de usuario">
+                                </mat-form-field>
+                            </div>
+                            <div class="flex flex-col">
+                                <mat-label class="block mb-1">Tópico</mat-label>
+                                <mat-form-field class="w-full">
+                                    <input matInput formControlName="topic" placeholder="Tópico del broker">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="w-1/2 flex flex-col">
+                            <div class="flex flex-col">
+                                <mat-label class="block mb-1">ClientID</mat-label>
+                                <mat-form-field class="w-full">
+                                    <input matInput formControlName="clientId" placeholder="clientId-A9UZcYmtr4">
+                                </mat-form-field>
+                            </div>
+                            <div class="flex flex-col">
+                                <mat-label class="block mb-1">Password</mat-label>
+                                <mat-form-field class="w-full">
+                                    <input matInput formControlName="password" type="password" placeholder="Contraseña">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Si la conexión es API -->
+                    <div *ngIf="connectionForm.controls['type'].value === 1" class="flex gap-4">
+                        <div class="w-1/2 flex flex-col">
+                            <div class="flex flex-col">
+                                <mat-label class="block mb-1">URL</mat-label>
+                                <mat-form-field class="w-full">
+                                    <input matInput formControlName="URL" placeholder="https://ingest.kunna.es">
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="w-1/2 flex flex-col">
+                            <mat-label class="block mb-1">Header</mat-label>
+                            <mat-form-field class="w-full">
+                                <input matInput formControlName="header" placeholder="Encabezado de autenticación">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="flex items-center justify-end border-t -mx-8 mt-4 px-8 py-5 bg-gray-50 dark:bg-gray-700 rounded-b-lg">
+                    <button mat-button type="button" (click)="cancel()">Cancelar</button>
+                    <button class="px-6 ml-3 text-white" mat-flat-button [color]="'primary'" type="submit">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,110 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:px-10">
+        <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between pb-4 px-1">
+            <div class="flex-1 min-w-0">
+                <div class="flex flex-col">
+                    <div class="mr-8">
+                        <a class="whitespace-nowrap text-secondary-500 md:text-2xl">Lista usuarios</a>
+                    </div>
+                </div>
+            </div>
+            <div class="relative mr-4">
+                <input
+                    type="text"
+                    [(ngModel)]="searchTerm"
+                    (input)="filterUsers()"
+                    placeholder="Buscar..."
+                    class="bg-white-200 border border-gray-300 text-gray-900 rounded-lg py-2 px-4 focus:outline-none focus:ring-1 focus:ring-sky-500"
+                />
+                <mat-icon
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    [svgIcon]="'heroicons_mini:magnifying-glass'"
+                ></mat-icon>
+            </div>
+            <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+                <button
+                    class="ml-3 bg-sky-400 hover:bg-sky-500 text-white"
+                    mat-flat-button [routerLink]="['crear']">
+                    <mat-icon class="icon-size-4" [svgIcon]="'heroicons_mini:plus'"></mat-icon>
+                    <span class="ml-2">Nueva</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- CONTENT GOES HERE -->
+        <div class="max-h-400 rounded-2xl">
+            <div class="grid grid-cols-1 gap-8 w-full">
+                <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden p-2">
+                    <div class="overflow-x-auto mx-6 mb-4 mt-5">
+                        <table class="w-full table-auto bg-transparent">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-s font-medium text-gray-500 tracking-wider">ID</th>
+                                    <th class="px-6 py-3 text-left text-s font-medium text-gray-500 tracking-wider w-2/6">Usuario</th>
+                                    <th class="px-6 py-3 text-left text-s font-medium text-gray-500 tracking-wider">Rol</th>
+                                    <th class="px-6 py-3 text-left text-s font-medium text-gray-500 tracking-wider">Estado</th>
+                                    <th class="px-6 py-3 text-left text-s font-medium text-gray-500 tracking-wider flex justify-end"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let user of filteredUsers" class="cursor-pointer" (click)="openEditUser(user.id)">
+                                    <td class="px-6 py-4 whitespace-nowrap text-s font-medium text-gray-600">{{ user.id }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-s font-medium text-gray-600">{{ user.username }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-s">
+                                        <span class="text-gray-600 flex items-center">
+                                            <ng-container *ngIf="user.rol === 1">
+                                                <mat-icon class="mr-2 align-middle" style="font-size: 20px;">admin_panel_settings</mat-icon>
+                                                <span class="align-middle">Administrador</span>
+                                            </ng-container>
+                                            <ng-container *ngIf="user.rol !== 1">
+                                                <mat-icon class="mr-2 align-middle" style="font-size: 20px;">person</mat-icon>
+                                                <span class="align-middle">Básico</span>
+                                            </ng-container>
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-s">
+                                        <span [ngClass]="user.estado === 1 ? 'text-green-500' : 'text-red-500'">
+                                            {{ user.estado === 1 ? 'Activo' : 'Inactivo' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-s text-gray-600 space-x-2 flex justify-end">
+                                        <button
+                                            mat-icon-button (click)="confirmDelete(user.id)">
+                                            <mat-icon class="text-2xl">delete</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación -->
+<div
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    *ngIf="showModal"
+>
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+        <h2 class="text-lg font-semibold text-gray-800">Confirmar eliminación</h2>
+        <p class="mt-4 text-sm text-gray-600">
+            ¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.
+        </p>
+        <div class="mt-6 flex justify-end space-x-4">
+            <button
+                class="px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800"
+                (click)="cancelDelete()">
+                Cancelar
+            </button>
+            <button
+                class="px-4 py-2 text-base font-medium text-white bg-red-500 hover:bg-red-600 rounded"
+                (click)="deleteUser()">
+                Eliminar
+            </button>
+        </div>
+    </div>
+</div>
